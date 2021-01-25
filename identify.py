@@ -2,21 +2,11 @@
 import os
 import sys
 from os import close
-import pickle
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
-from PIL import Image
 
 def otsu(img_dir):
-    # with open(img_dir, 'rb') as f :
-    #     img = pickle.load(f)
-    #     img = np.swapaxes(img, 0, 2)
-    #     img = np.swapaxes(img, 0, 1) # 因为ToTensor会将nadarrayHWC转为CHW，所以要先把ndarray的CHW转为ndarray的HWC
-    # img = np.uint16(img)
-    # img = Image.fromarray(img)
-    # img = img.convert('I;16')
-    # img = np.asarray(img)
     img = cv2.imread(img_dir,cv2.IMREAD_UNCHANGED)       #载入图像
     h, w = img.shape[:2]            #获取图像的高和宽 
     blured = cv2.blur(img,(5,5))    #进行滤波去掉噪声
