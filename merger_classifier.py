@@ -21,6 +21,8 @@ LEARNING_RATE = 1e-3    # 学习率
 EPOCHES = 50    # 训练次数
 DATA_SOURCE_DIR = r"D:\Code\MachineLearning\Data\2020.12.15_MergerClassifier"   # 总数据存放文件夹
 MODEL_SOURCE_DIR = r"D:\Code\MachineLearning\Model\2020.12.15_MergerClassifier" # 总模型存放文件夹
+TRAIN_DATA_TXT_PATH = r'train_data.txt'
+TEST_DATA_TXT_PATH = r'test_data.txt'
 
 def changeAxis(data):
     '''
@@ -85,8 +87,8 @@ class MerGalDataset(Dataset):
 transfer = transforms.Compose([
             transforms.ToTensor(),
             ])
-train_data = MerGalDataset(txt_path='train_data.txt', transform=transfer)
-train_loader = DataLoader(dataset=train_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)
+train_data = MerGalDataset(txt_path=TRAIN_DATA_TXT_PATH, transform=transfer)
+train_loader = DataLoader(dataset=TEST_DATA_TXT_PATH, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)
 
 test_data = MerGalDataset(txt_path='test_data.txt', transform=transfer)
 test_loader = DataLoader(dataset=test_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)
@@ -153,7 +155,7 @@ def predict(path,model_name):
             _, predicted = torch.max(outputs, 1)
             return predicted[0]
 
-def trainModel(model_package, continue, last_epoch):
+def trainModel(model_package,continue,last_epoch):
     '''
     训练
     '''
@@ -307,7 +309,7 @@ if __name__ == "__main__":
     model_package_name = '%s//'%(MODEL_SOURCE_DIR) + modelPackageWrite('normal_')
     # 模型保存文件夹（无需实现创建），是否断点续训，如果断点续寻，上次训练到第几个epoch了
     # model_package_name = r'model\model_normal-2021-01-03-085331'
-    trainModel(model_package_name, continue=True, last_epoch= 8)
+    trainModel(model_package_name, continue=False, last_epoch= 8)
 
     # verifyModel(r'classifier_data\verify_data\\0', 0, r'model\model_normal-2021-01-01-014012\model_48.model')
     # verifyModel(r'classifier_data\verify_data\\1', 1, r'model\model_normal-2021-01-01-014012\model_48.model')
