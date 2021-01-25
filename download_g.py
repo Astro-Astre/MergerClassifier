@@ -15,9 +15,7 @@ def readCSV(path):
 class fitsDo:
     def __init__(self):
         pass
-        
 
-        
     # 打开filename的fits文件，后续使用直接调用hudl，主要用于drawPicture方法
     def openFits(self,filename):
         self.filename = filename
