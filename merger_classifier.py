@@ -88,9 +88,9 @@ transfer = transforms.Compose([
             transforms.ToTensor(),
             ])
 train_data = MerGalDataset(txt_path=TRAIN_DATA_TXT_PATH, transform=transfer)
-train_loader = DataLoader(dataset=TEST_DATA_TXT_PATH, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)
+train_loader = DataLoader(dataset=train_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)
 
-test_data = MerGalDataset(txt_path='test_data.txt', transform=transfer)
+test_data = MerGalDataset(txt_path=TEST_DATA_TXT_PATH, transform=transfer)
 test_loader = DataLoader(dataset=test_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)
 
 class Model(nn.Module):
@@ -155,7 +155,7 @@ def predict(path,model_name):
             _, predicted = torch.max(outputs, 1)
             return predicted[0]
 
-def trainModel(model_package,continue,last_epoch):
+def trainModel(model_package,flag,last_epoch):
     '''
     训练
     '''
@@ -171,9 +171,9 @@ def trainModel(model_package,continue,last_epoch):
     eval_acces = []
     start = -1
     
-    # continue = True时进行断点续训
-    if continue:
-        path_checkpoint = '%s\%s\checkpoint\ckpt_best_%d.pth' %(MODEL_SOURCE_DIR, model_package, last_epoch)  # 断点路径
+    # flag = True时进行断点续训
+    if flag:
+        path_checkpoint = '%s\checkpoint\ckpt_best_%d.pth' %(model_package, last_epoch)  # 断点路径
         checkpoint = torch.load(path_checkpoint)  # 加载断点
         model.load_state_dict(checkpoint['net'])  # 加载模型可学习参数
         optimizer.load_state_dict(checkpoint['optimizer'])  # 加载优化器参数
@@ -308,8 +308,8 @@ if __name__ == "__main__":
     model.to(device)
     model_package_name = '%s//'%(MODEL_SOURCE_DIR) + modelPackageWrite('normal_')
     # 模型保存文件夹（无需实现创建），是否断点续训，如果断点续寻，上次训练到第几个epoch了
-    # model_package_name = r'model\model_normal-2021-01-03-085331'
-    trainModel(model_package_name, continue=False, last_epoch= 8)
+    model_package_name = r'D:\Code\MachineLearning\Model\2020.12.15_MergerClassifier\model_normal-2021-01-03-085331'
+    trainModel(model_package_name, flag=True, last_epoch= 24)
 
     # verifyModel(r'classifier_data\verify_data\\0', 0, r'model\model_normal-2021-01-01-014012\model_48.model')
     # verifyModel(r'classifier_data\verify_data\\1', 1, r'model\model_normal-2021-01-01-014012\model_48.model')
