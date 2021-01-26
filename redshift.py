@@ -9,7 +9,7 @@ import seaborn as sns
 
 if __name__ == "__main__":
     start = time.time()
-    f = open(r'merger.txt','r')
+    f = open(r'galaxy.txt','r')
     data= f.readlines()
     f.close()
     x = []
@@ -18,14 +18,14 @@ if __name__ == "__main__":
 
         img_name, label = [str(j) for j in data[i].split()]
         img_name = img_name.split('_')[0]+'.jpg'
-        img_dir =os.path.join(r'raw_data\jpg\redshift_galaxy_jpg',img_name)
+        img_dir =os.path.join(r'D:\Code\MachineLearning\Data\2020.12.15_MergerClassifier\raw_data\jpg\redshift_galaxy_jpg',img_name)
         # img_dir =os.path.join('raw_data/jpg/merger_jpg/',img_name.split('.')[0]+'.jpg')
         try:
             y = it.otsu(img_dir)
         except AttributeError:
             print(img_dir)
         else:
-            if label=='0':
+            if label=='1':
             #     plt.scatter(i,y,c='r',marker='.')
             # else :
             #     plt.scatter(i,y,c='b',marker='.')
@@ -35,5 +35,6 @@ if __name__ == "__main__":
             sys.stdout.flush()
     endtime = time.time()
     print('time cost:',endtime-start)
-    sns.histplot(x)
+    sns.histplot(x, bins=95)
+    plt.savefig(r'Figure/非Merger占比与错误图')
     plt.show()
