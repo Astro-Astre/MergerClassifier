@@ -141,10 +141,14 @@ if __name__ == "__main__":
     # verifyModel(r'alfalfa_dat_normal',
     #     r'2020-01-02-alfalfa_model48.txt',
     #     r'model\model_normal-2021-01-01-014012\model_48.model')
-    verifyModel(r'D:\Code\MachineLearning\Data\2020.12.15_MergerClassifier\verify_data\0',
-        r'galaxy.txt',
-        # r'model\model_normal-2021-01-01-014012\model_48.model'),
-        r'D:\Code\MachineLearning\Model\2020.12.15_MergerClassifier\model_normal-2021-01-03-085331\model_23.model'),
-    
+    # verifyModel(r'D:\Code\MachineLearning\Data\2020.12.15_MergerClassifier\verify_data\0',
+    #     r'galaxy.txt',
+    #     # r'model\model_normal-2021-01-01-014012\model_48.model'),
+    #     r'D:\Code\MachineLearning\Model\2020.12.15_MergerClassifier\model_normal-2021-01-03-085331\model_23.model'),
+    verifyModel(r'D:\Code\MachineLearning\Data\2020.12.15_MergerClassifier\verify_data\1',
+                r'merger.txt',
+                # r'model\model_normal-2021-01-01-014012\model_48.model'),
+                r'D:\Code\MachineLearning\Model\2020.12.15_MergerClassifier\model_normal-2021-01-03-085331\model_23.model'),
+
     endtime = time.time()
     print('time cost:',endtime-start)
