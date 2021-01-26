@@ -8,13 +8,13 @@ import numpy as np
 import torch
 from torch import nn
 from torchvision import transforms
-from merger_classifier import Model
+
 transfer = transforms.Compose([
-            transforms.ToTensor(),
-            ])
+    transforms.ToTensor(),
+])
 
 
-def dataPrepare(file, transform):
+def data_prepare(file, transform):
     img = pickle.load(file)
     img = np.swapaxes(img, 0, 2)
     img = np.swapaxes(img, 0, 1)
@@ -22,37 +22,35 @@ def dataPrepare(file, transform):
     return img
 
 
-
 class Model(nn.Module):
     def __init__(self):
-        super(Model,self).__init__()
+        super(Model, self).__init__()
         self.conv1 = nn.Sequential(
-            nn.Conv2d(3, 32, 6, stride= 1, padding= 3, bias= 0.1),
+            nn.Conv2d(3, 32, 6, stride=1, padding=3, bias=0.1),
             nn.MaxPool2d(20, stride=2, padding=9),
             nn.ReLU(True),
-            )
+        )
         self.conv2 = nn.Sequential(
-            nn.Conv2d(32, 64, 5, stride= 1, padding= 2, bias= 0.1),
+            nn.Conv2d(32, 64, 5, stride=1, padding=2, bias=0.1),
             nn.MaxPool2d(8, stride=2, padding=4),
             nn.ReLU(True),
-            )
+        )
         self.conv3 = nn.Sequential(
-            nn.Conv2d(64, 128, 3, stride=1,bias=0.1),
+            nn.Conv2d(64, 128, 3, stride=1, bias=0.1),
             nn.ReLU(True),
-            )
+        )
         self.conv4 = nn.Sequential(
-            nn.Conv2d(128, 128, 3, stride= 1, padding= 1,bias= 0.1),
-            nn.MaxPool2d(2, stride= 2, padding= 1),
+            nn.Conv2d(128, 128, 3, stride=1, padding=1, bias=0.1),
+            nn.MaxPool2d(2, stride=2, padding=1),
             nn.ReLU(True),
-            )
+        )
         self.fc = nn.Sequential(
-            nn.Linear(131072, 128,bias= 0.01),
+            nn.Linear(131072, 128, bias=0.01),
             nn.Dropout(0.5),
-            nn.Linear(128, 128,bias= 0.01),
+            nn.Linear(128, 128, bias=0.01),
             nn.Dropout(0.5),
-            nn.Linear(128, 2,bias= 0.1),
-            )
-
+            nn.Linear(128, 2, bias=0.1),
+        )
 
     def forward(self, x):
         batch_size = x.size(0)
@@ -70,20 +68,21 @@ class Model(nn.Module):
         return out
 
 
-def predict(path,model_name):
+def predict(path, model_name):
     net = torch.load(model_name)
     device = torch.device("cuda:0")
     net = net.to(device)
     net.eval()
 
     with torch.no_grad():
-        with open(path,'rb') as f:
-            img = dataPrepare(f, transform= transfer)
+        with open(path, 'rb') as f:
+            img = data_prepare(f, transform=transfer)
             img = img.unsqueeze(0)
             img = img.to(device)
             outputs = net(img)
-            _, predicted = torch.max(outputs,1)
+            _, predicted = torch.max(outputs, 1)
             return predicted[0]
+
 
 # def verifyModel(data_path,txt_path,model_name):
 #     pre = os.listdir(data_path)
@@ -108,30 +107,32 @@ def predict(path,model_name):
 #     print('merger_num:',merger)
 #     print('galaxy_num:',galaxy)
 #     f.close()
-        
-def verifyModel(data_path,txt_path,model_name):
+
+
+def verify_model(data_path, txt_path, model_name):
     pre = os.listdir(data_path)
     f = open(txt_path, 'w')
     galaxy = 0
     merger = 0
     for i in range(len(pre)):
-        percent = 1.0 * i / len(pre)  #用于显示进度
-        pred = predict(data_path+'\\'+pre[i],model_name)
-        if pred.item()==1:
+        percent: float = 1.0 * i / len(pre)  # 用于显示进度
+        pred = predict(data_path + '\\' + pre[i], model_name)
+        if pred.item() == 1:
             line = pre[i].split('.')[0] + r'.jpg 1' + '\n'
             merger += 1
-        if pred.item()==0:
+        if pred.item() == 0:
             line = pre[i].split('.')[0] + r'.jpg 0' + '\n'
             galaxy += 1
         f.write(line)
         # 用于显示进度
-        sys.stdout.write("进度：%.4f"%(percent*100))
+        sys.stdout.write("进度：%.4f" % (percent * 100))
         sys.stdout.write("%\r")
         sys.stdout.flush()
 
-    print('merger_num:',merger)
-    print('galaxy_num:',galaxy)
+    print('merger_num:', merger)
+    print('galaxy_num:', galaxy)
     f.close()
+
 
 if __name__ == "__main__":
     start = time.time()
@@ -145,10 +146,10 @@ if __name__ == "__main__":
     #     r'galaxy.txt',
     #     # r'model\model_normal-2021-01-01-014012\model_48.model'),
     #     r'D:\Code\MachineLearning\Model\2020.12.15_MergerClassifier\model_normal-2021-01-03-085331\model_23.model'),
-    verifyModel(r'D:\Code\MachineLearning\Data\2020.12.15_MergerClassifier\verify_data\1',
-                r'merger.txt',
-                # r'model\model_normal-2021-01-01-014012\model_48.model'),
-                r'D:\Code\MachineLearning\Model\2020.12.15_MergerClassifier\model_normal-2021-01-03-085331\model_23.model'),
+    verify_model(r'D:\Code\MachineLearning\Data\2020.12.15_MergerClassifier\verify_data\1',
+                 r'merger.txt',
+                 # r'model\model_normal-2021-01-01-014012\model_48.model'),
+                 r'D:\Code\MachineLearning\Model\2020.12.15_MergerClassifier\model_normal-2021-01-03-085331\model_23.model'),
 
-    endtime = time.time()
-    print('time cost:',endtime-start)
+    end_time = time.time()
+    print('time cost:', end_time - start)

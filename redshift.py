@@ -7,34 +7,41 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-if __name__ == "__main__":
-    start = time.time()
-    f = open(r'galaxy.txt','r')
-    data= f.readlines()
-    f.close()
+def show_redshift_hist(txt_path, jpg_dir, flag, figure_save_dir, right_label, bins):
+    opened_file = open(txt_path, "r")
+    txt_data = opened_file.readlines()
+    opened_file.close()
     x = []
-    for i in range(len(data)):
-        percent = 1.0 * i / len(data)  #用于显示进度
+    for i in range(len(txt_data)):
+        percent: float = 1.0 * i / len(txt_data)  # 用于显示进度
 
-        img_name, label = [str(j) for j in data[i].split()]
-        img_name = img_name.split('_')[0]+'.jpg'
-        img_dir =os.path.join(r'D:\Code\MachineLearning\Data\2020.12.15_MergerClassifier\raw_data\jpg\redshift_galaxy_jpg',img_name)
-        # img_dir =os.path.join('raw_data/jpg/merger_jpg/',img_name.split('.')[0]+'.jpg')
+        img_name, label = [str(j) for j in txt_data[i].split()]
+        if not img_name.split('.')[-1] == "jpg":
+            img_name = img_name.split('_')[0] + '.jpg'
+        img_dir = os.path.join(jpg_dir, img_name)
+
         try:
-            y = it.otsu(img_dir)
+            percent_of_image = it.otsu(img_dir)
         except AttributeError:
-            print(img_dir)
+            print("cannot open this image:", img_dir)
         else:
-            if label=='1':
-            #     plt.scatter(i,y,c='r',marker='.')
-            # else :
-            #     plt.scatter(i,y,c='b',marker='.')
-                x.append(y)
-            sys.stdout.write("进度：%.4f"%(percent*100))
+            if label != right_label:
+                x.append(percent_of_image)
+
+            sys.stdout.write(f"进度：{percent * 100:.4f}")
             sys.stdout.write("%\r")
             sys.stdout.flush()
-    endtime = time.time()
-    print('time cost:',endtime-start)
-    sns.histplot(x, bins=95)
-    plt.savefig(r'Figure/非Merger占比与错误图')
+    end_time = time.time()
+    print('time cost:', end_time - start)
+    sns.histplot(x, bins=bins)
+    if flag:
+        plt.savefig(figure_save_dir)
     plt.show()
+
+
+if __name__ == "__main__":
+    start = time.time()
+    show_redshift_hist(r"merger.txt",
+                       r"D:\Code\MachineLearning\Data\2020.12.15_MergerClassifier\raw_data\jpg\merger_jpg",
+                       bins=9, flag=True, figure_save_dir=r"Figure/Merger占比与错误图.png"
+                       , right_label='1')
