@@ -146,10 +146,10 @@ if __name__ == "__main__":
     #     r'galaxy.txt',
     #     # r'model\model_normal-2021-01-01-014012\model_48.model'),
     #     r'D:\Code\MachineLearning\Model\2020.12.15_MergerClassifier\model_normal-2021-01-03-085331\model_23.model'),
-    verify_model(r'D:\Code\MachineLearning\Data\2020.12.15_MergerClassifier\verify_data\1',
-                 r'merger.txt',
+    verify_model(r'D:\Code\MachineLearning\Data\2020.12.15_MergerClassifier\alfalfa_dat_normal',
+                 r'alfalfa.txt',
                  # r'model\model_normal-2021-01-01-014012\model_48.model'),
-                 r'D:\Code\MachineLearning\Model\2020.12.15_MergerClassifier\model_normal-2021-01-03-085331\model_23.model'),
+                 r'D:\Code\MachineLearning\Model\2020.12.15_MergerClassifier\model_normal-2021-01-01-014012\model_48.model'),
 
     end_time = time.time()
     print('time cost:', end_time - start)
